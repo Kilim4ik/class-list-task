@@ -1,4 +1,5 @@
 "use strict";
+
 import tmp from "./template/tmp.hbs";
 let students = [];
 students = JSON.parse(localStorage.getItem("students"));
