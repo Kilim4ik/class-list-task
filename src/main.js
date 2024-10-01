@@ -23,6 +23,7 @@ const arrayToObj = (callback) => {
   return student;
 };
 
+
 const renderTable = () => {
   let code = ``;
   students

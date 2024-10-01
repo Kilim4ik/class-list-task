@@ -23,6 +23,7 @@ input {
   font-weight: bold;
   font-size: 18px;
 }
+
 .template__list {
   /* display: flex; */
   list-style-type: none;
