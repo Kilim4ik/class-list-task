@@ -17,7 +17,7 @@ input {
 }
 .template-nav__list {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
 }
 .template-nav__list li {
   list-style-type: none;
@@ -32,7 +32,7 @@ input {
 }
 .student {
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(7, 1fr);
 }
 .student__elem {
   list-style-type: none;

@@ -1,9 +1,10 @@
 "use strict";
 
-import tmp from "./template/tmp.hbs";
+// import tmp from "./template/tmp.hbs";
 let students = [];
 students = JSON.parse(localStorage.getItem("students"));
 const form = document.querySelector(".student-form");
+const template = document.querySelector(".template__list");
 const takeStudentData = () => {
   const userData = Array.from(form.children).map((elem) => elem.value);
   userData.pop();
@@ -23,8 +24,9 @@ const arrayToObj = (callback) => {
   if (isNaN(student.age)) return;
   return student;
 };
-
-
+const updateJSON = () => {
+  localStorage.setItem("students", JSON.stringify(students));
+};
 const renderTable = () => {
   let code = ``;
   students
@@ -32,36 +34,47 @@ const renderTable = () => {
     .forEach((elem) => {
       code += `
       <li>
-          <ul class="student">
-          <li class="student__elem">${elem.name}</li>
-          <li class="student__elem">${elem.surname}</li>
-          <li class="student__elem">${elem.age}</li>
-          <li class="student__elem">${elem.mainCourse}</li>
-          <li class="student__elem">${elem.faculty}</li>
-          <li class="student__elem">${elem.allCourses}</li>
-        </ul>
-        </li>`;
+      <ul class="student">
+        <li class="student__elem">${elem.name}</li>
+        <li class="student__elem">${elem.surname}</li>
+        <li class="student__elem">${elem.age}</li>
+        <li class="student__elem">${elem.mainCourse}</li>
+        <li class="student__elem">${elem.faculty}</li>
+        <li class="student__elem">${elem.allCourses.join(", ")}</li>
+        <li class="student__elem">
+          <button class="student__delete-button" 
+          data-student-name="${elem.name}" 
+          data-student-surname="${elem.surname}">
+          за кораблем
+          </button>
+        </li>
+      </ul>
+    </li>`;
     });
-  document.querySelector(".template__list").innerHTML = code;
+  template.innerHTML = code;
 };
+renderTable();
+
 form.addEventListener("submit", (e) => {
   e.preventDefault();
   students.push(arrayToObj(takeStudentData()));
-  localStorage.setItem("students", JSON.stringify(students));
+  updateJSON;
   renderTable();
 });
-
-renderTable();
-const markup = tmp({ students });
-console.log(markup);
-console.log(typeof tmp);
+template.addEventListener("click", (e) => {
+  if (e.target.classList == "student__delete-button") {
+    const name = e.target.dataset.studentName;
+    const surname = e.target.dataset.studentSurname;
+    students = students.filter((elem) => {
+      if (elem != null) {
+        return elem.name !== name && elem.surname !== surname;
+      }
+    });
+    updateJSON();
+    renderTable();
+  }
+});
+// const markup = tmp({ students });
+// console.log(markup);
+// console.log(typeof tmp);
 // сделать два дата атрибута  , сделать поиск по этим дата атрибутам и удалять объект , обновлять рендер и json
-console.log(students);
-
-const isDataInStorage = (key) => {
-  return !!localStorage.getItem(key);
-};
-console.log(isDataInStorage("userName"));
-
-localStorage.setItem("key", null);
-console.log(isDataInStorage("key"));
