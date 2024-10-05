@@ -1,12 +1,13 @@
 "use strict";
 
-// import tmp from "./template/tmp.hbs";
 let students = [];
 students = JSON.parse(localStorage.getItem("students"));
 const form = document.querySelector(".student-form");
+const changeForm = document.querySelector(".chenging-form");
+
 const template = document.querySelector(".template__list");
-const takeStudentData = () => {
-  const userData = Array.from(form.children).map((elem) => elem.value);
+const takeStudentData = (inputs) => {
+  const userData = Array.from(inputs.children).map((elem) => elem.value);
   userData.pop();
   if (userData.some((elem) => elem == "" || elem == " ")) return;
   return userData;
@@ -24,6 +25,21 @@ const arrayToObj = (callback) => {
   if (isNaN(student.age)) return;
   return student;
 };
+const clearForm = (arr) => {
+  arr = arr.children;
+  for (let i = 0; i < arr.length; i++) {
+    arr[i].value = "";
+  }
+};
+const chengeInputsForChenging = (arrInputs, student) => {
+  arrInputs[0].value = student.name;
+  arrInputs[1].value = student.surname;
+  arrInputs[2].value = student.age;
+  arrInputs[3].value = student.mainCourse;
+  arrInputs[4].value = student.faculty;
+  arrInputs[5].value = student.allCourses.join(",");
+};
+
 const updateJSON = () => {
   localStorage.setItem("students", JSON.stringify(students));
 };
@@ -48,6 +64,13 @@ const renderTable = () => {
           за кораблем
           </button>
         </li>
+        <li class="student__elem">
+          <button class="student__change-button" 
+          data-student-name="${elem.name}" 
+          data-student-surname="${elem.surname}">
+          заміна
+          </button>
+        </li>
       </ul>
     </li>`;
     });
@@ -57,8 +80,9 @@ renderTable();
 
 form.addEventListener("submit", (e) => {
   e.preventDefault();
-  students.push(arrayToObj(takeStudentData()));
-  updateJSON;
+  students.push(arrayToObj(takeStudentData(form)));
+  updateJSON();
+  clearForm(form);
   renderTable();
 });
 template.addEventListener("click", (e) => {
@@ -73,8 +97,23 @@ template.addEventListener("click", (e) => {
     updateJSON();
     renderTable();
   }
+  if (e.target.classList == "student__change-button") {
+    const name = e.target.dataset.studentName;
+    const surname = e.target.dataset.studentSurname;
+    const student = students.find(
+      (elem) => elem.name == name && elem.surname == surname
+    );
+    chengeInputsForChenging(changeForm.children, student);
+    changeForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      students.splice(
+        students.indexOf(student),
+        1,
+        arrayToObj(takeStudentData(changeForm))
+      );
+      clearForm(changeForm);
+
+      renderTable();
+    });
+  }
 });
-// const markup = tmp({ students });
-// console.log(markup);
-// console.log(typeof tmp);
-// сделать два дата атрибута  , сделать поиск по этим дата атрибутам и удалять объект , обновлять рендер и json

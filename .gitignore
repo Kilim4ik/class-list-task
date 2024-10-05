@@ -4,3 +4,4 @@ package.json
 dist
 .cache
 .DS_Store
+.parcel-cache
