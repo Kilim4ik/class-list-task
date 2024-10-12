@@ -1,7 +1,7 @@
 "use strict";
 
-let students = [];
-students = JSON.parse(localStorage.getItem("students"));
+let students = JSON.parse(localStorage.getItem("students")) || [];
+
 const form = document.querySelector(".student-form");
 const changeForm = document.querySelector(".chenging-form");
 
